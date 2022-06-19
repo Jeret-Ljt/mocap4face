@@ -23,19 +23,22 @@ const fpsElement = document.getElementById('fps')
 const fallbackVideo = videoElement.currentSrc
 
 function startTracking() {
+
+    
+
     const faceRectangleElement = document.getElementById('rectangle')
     const blendshapeSliders = new Map<String, HTMLElement>()
     const context = new ApplicationContext(window.location.href) // Set a different URL here if you host application resources elsewhere
     const fs = new ResourceFileSystem(context)
     const fps = new FPS(1)
-
+    var last: number = 0
     // uncomment for de/serialization example bellow
     // const serializer = FaceTrackerResultSerializer.create()
     // const deserializer = FaceTrackerResultDeserializer.create(serializer.serializationFormat)
 
     // Initialize the API and activate API key
     // Note that without an API key the SDK works only for a short period of time
-    FacemojiAPI.initialize('<YOUR KEY HERE>', context).then((activated) => {
+    FacemojiAPI.initialize('caxiyijtxyappzlg2nklhgxemqmidtqicakjyme6vnyms5cp34im4oa', context).then((activated) => {
         if (activated) {
             console.info('API successfully activated')
         } else {
@@ -97,14 +100,29 @@ function startTracking() {
             return
         }
 
+    if (videoElement.videoHeight != last){
+        last = videoElement.videoHeight
+        console.log(videoElement.src)
+        console.log(videoElement.className)
+        console.log(videoElement.videoHeight)
+        console.log(videoElement.videoWidth)
+        console.log(videoElement.currentSrc)
+        console.log(videoElement.srcObject)
+        console.log(videoElement.currentTime)
+
+    }
+
+
         if (videoElement.paused || document.hidden) {
             statusElement.hidden = false
             return
         }
 
         statusElement.hidden = true
-
+        
         // Face tracking
+
+
         const lastResult = tracker.track(videoElement)
         if (lastResult == null) {
             setFaceRectangleVisible(false)
