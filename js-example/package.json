@@ -11,7 +11,8 @@
   "author": "Alter",
   "license": "ISC",
   "dependencies": {
-    "@0xalter/mocap4face": "^0.3.0"
+    "@0xalter/mocap4face": "^0.3.0",
+    "debugout.js": "^1.1.0"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
