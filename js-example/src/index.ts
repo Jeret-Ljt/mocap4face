@@ -82,6 +82,10 @@ function startTracking() {
     const context = new ApplicationContext(window.location.href) // Set a different URL here if you host application resources elsewhere
     const fs = new ResourceFileSystem(context)
     
+    const bugout = new Debugout()
+    bugout.autoTrim = false
+    bugout.realTimeLoggingOn = true
+
     // uncomment for de/serialization example bellow
     // const serializer = FaceTrackerResultSerializer.create()
     // const deserializer = FaceTrackerResultDeserializer.create(serializer.serializationFormat)
@@ -97,24 +101,17 @@ function startTracking() {
     })
 
     const webcamAvailable = checkWebcamAvailable()
-    videoElement.oncanplay = ()=> {
-        bugout.log(videoName)
-        videoElement.playbackRate = 0.2
-
-        if (count == 2){
-            videoElement.currentTime = 970.92
-        }
-        videoElement.play()
-        videoElement.requestVideoFrameCallback(track)
-    }
-
+ 
     function videoEnd(){
         console.log("end")
     
         count++
+        
+        bugout.downloadLog()
+        bugout.clear()
+        line = 0
+
         if (count == 7){
-            bugout.downloadLog()
-            //bugout.clear()
             return
         }
         videoName = `${count}.mp4`
@@ -123,10 +120,23 @@ function startTracking() {
         
     
     }
+    videoElement.oncanplay = ()=> {
+        bugout.log(videoName)
+        videoElement.playbackRate = 2
 
-    const bugout = new Debugout()
-    bugout.autoTrim = false
-    bugout.realTimeLoggingOn = true
+        if (count == 2){
+            videoElement.currentTime = 1132.4
+        }
+        videoElement.play()
+        videoElement.requestVideoFrameCallback(track)
+    }
+
+   
+    videoElement.onended = () =>{
+        console.log("in onended~~~")
+        videoEnd()
+    }
+    
 
     // Initialize
     const asyncTracker = FaceTracker.createVideoTracker(fs)
@@ -240,6 +250,7 @@ function startTracking() {
         
         videoElement.currentTime += 0.05
         if (videoElement.ended){
+            console.log("in ended~~")
             videoEnd()
             return
         }
